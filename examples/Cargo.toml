@@ -29,5 +29,9 @@ name = "accept_invite"
 path = "accept_invite.rs"
 
 [[example]]
+name = "ring_invite"
+path = "ring_invite.rs"
+
+[[example]]
 name = "send_invite"
 path = "send_invite.rs"
