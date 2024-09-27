@@ -13,7 +13,7 @@ use sip_core::{Endpoint, IncomingRequest, LayerKey, Result};
 use sip_types::header::typed::{RSeq, Require, Supported};
 use sip_types::{Code, Method};
 use std::sync::Arc;
-use tokio::sync::{mpsc, oneshot, Mutex};
+use tokio::sync::{mpsc, oneshot, Mutex, Notify};
 use tokio::time::timeout;
 
 #[derive(Debug, thiserror::Error)]
@@ -37,6 +37,9 @@ pub struct Acceptor {
 
     /// Configuration for `timer` extension
     timer_config: AcceptorTimerConfig,
+
+    /// for receive cancel event
+    cancel_notify: Arc<Notify>,
 }
 
 impl Drop for Acceptor {
@@ -88,6 +91,7 @@ impl Acceptor {
         let dialog_layer = dialog.dialog_layer;
 
         // Create Inner shared state
+        let cancel_notify = Arc::new(Notify::new());
         let tsx = endpoint.create_server_inv_tsx(&mut invite);
         let inner = Arc::new(Inner {
             invite_layer,
@@ -95,6 +99,7 @@ impl Acceptor {
                 dialog,
                 tsx,
                 invite,
+                cancel_notify: cancel_notify.clone(),
             }),
             peer_supports_timer,
             peer_supports_100rel,
@@ -126,6 +131,7 @@ impl Acceptor {
             usage_guard: Some(usage_guard),
             cancellable_key,
             timer_config: AcceptorTimerConfig::default(),
+            cancel_notify,
         })
     }
 
@@ -291,5 +297,9 @@ impl Acceptor {
         } else {
             Err(Error::RequestTerminated)
         }
+    }
+
+    pub async fn wait_cancelled(&mut self) {
+        self.cancel_notify.notified().await
     }
 }

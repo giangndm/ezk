@@ -15,7 +15,7 @@ use std::collections::HashMap;
 use std::mem::replace;
 use std::sync::Arc;
 use tokio::sync::mpsc::error::SendError;
-use tokio::sync::{mpsc, oneshot, Mutex};
+use tokio::sync::{mpsc, oneshot, Mutex, Notify};
 use tokio::time::timeout;
 
 pub mod acceptor;
@@ -52,6 +52,7 @@ enum InviteSessionState {
         dialog: Dialog,
         tsx: ServerInvTsx,
         invite: IncomingRequest,
+        cancel_notify: Arc<Notify>,
     },
 
     /// Cancelled: A CANCEL Request for the invite has been received
@@ -78,8 +79,10 @@ impl InviteSessionState {
                 dialog,
                 tsx,
                 invite,
+                cancel_notify,
             } = replace(self, InviteSessionState::Cancelled)
             {
+                cancel_notify.notify_one();
                 Some((dialog, tsx, invite))
             } else {
                 unreachable!()
@@ -100,6 +103,7 @@ impl InviteSessionState {
                 dialog,
                 tsx,
                 invite,
+                cancel_notify: _,
             } = replace(self, InviteSessionState::Established { evt_sink })
             {
                 Some((dialog, tsx, invite))
@@ -252,6 +256,7 @@ impl Usage for InviteUsage {
                         dialog,
                         tsx,
                         invite,
+                        cancel_notify: _,
                     } => {
                         if let Err(e) = self
                             .handle_bye_in_provisional_state(
