@@ -1,6 +1,6 @@
 [package]
 name = "ezk-sip-types"
-version = "0.2.1"
+version = "0.3.0"
 description = "SIP types providing parsing & serialization"
 categories = ["network-programming", "multimedia"]
 keywords = ["sip"]
@@ -12,7 +12,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-internal = { package = "ezk-internal", path = "../internal", version = "0.2" }
+internal.workspace = true
 
 bytesstr = "1"
 downcast-rs = "1.2.0"

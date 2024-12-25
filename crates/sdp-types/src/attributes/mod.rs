@@ -5,18 +5,28 @@ use std::fmt;
 mod candidate;
 mod crypto;
 mod direction;
+mod extmap;
+mod fingerprint;
 mod fmtp;
+mod group;
 mod ice;
 mod rtcp;
 mod rtpmap;
+mod setup;
+mod ssrc;
 
 pub use candidate::{IceCandidate, InvalidCandidateParamError, UntaggedAddress};
 pub use crypto::{SrtpCrypto, SrtpFecOrder, SrtpKeyingMaterial, SrtpSessionParam, SrtpSuite};
 pub use direction::Direction;
+pub use extmap::ExtMap;
+pub use fingerprint::{Fingerprint, FingerprintAlgorithm};
 pub use fmtp::Fmtp;
+pub use group::Group;
 pub use ice::{IceOptions, IcePassword, IceUsernameFragment};
 pub use rtcp::Rtcp;
 pub use rtpmap::RtpMap;
+pub use setup::Setup;
+pub use ssrc::{SourceAttribute, Ssrc};
 
 /// `name:[value]` pair which contains an unparsed/unknown attribute
 #[derive(Debug, Clone)]

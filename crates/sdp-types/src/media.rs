@@ -98,7 +98,7 @@ pub struct Media {
     pub port: u16,
     pub ports_num: Option<u32>,
     pub proto: TransportProtocol,
-    pub fmts: Vec<u32>,
+    pub fmts: Vec<u8>,
 }
 
 impl Media {
@@ -127,7 +127,7 @@ impl Media {
 
 impl fmt::Display for Media {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "m={}", self.media_type)?;
+        write!(f, "{}", self.media_type)?;
 
         if let Some(ports_num) = &self.ports_num {
             write!(f, " {}/{} ", self.port, ports_num)?;

@@ -42,7 +42,7 @@ impl Time {
 
 impl fmt::Display for Time {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "t={} {}", self.start, self.stop)
+        write!(f, "{} {}", self.start, self.stop)
     }
 }
 
@@ -64,6 +64,6 @@ mod test {
     fn time_print() {
         let time = Time { start: 0, stop: 0 };
 
-        assert_eq!(time.to_string(), "t=0 0");
+        assert_eq!(time.to_string(), "0 0");
     }
 }

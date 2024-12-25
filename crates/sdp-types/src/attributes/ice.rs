@@ -41,13 +41,11 @@ impl fmt::Display for IceOptions {
             return Ok(());
         }
 
-        write!(f, "a=ice-options:")?;
-
         for option in &self.options {
             write!(f, " {}", option)?;
         }
 
-        f.write_str("\r\n")
+        Ok(())
     }
 }
 
@@ -76,15 +74,9 @@ impl IceUsernameFragment {
     }
 }
 
-impl fmt::Display for IceUsernameFragment {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "a=ice-ufrag:{}", self.ufrag)
-    }
-}
-
 /// Ice password attribute (`a=ice-pwd`)
 ///
-/// Session and Media Level attribute  
+/// Session and Media Level attribute
 /// If not present at media level the attribute at session level is taken as default.
 ///
 /// [RFC5245](https://datatracker.ietf.org/doc/html/rfc5245#section-15.4)
@@ -104,11 +96,5 @@ impl IcePassword {
                 pwd: BytesStr::from_parse(src, pwd),
             }),
         )(i)
-    }
-}
-
-impl fmt::Display for IcePassword {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "a=ice-pwd:{}", self.pwd)
     }
 }
