@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
     let mut builder = Endpoint::builder();
 
     // Add a IPv4 UDP Socket
-    Udp::spawn(&mut builder, "0.0.0.0:5060").await?;
+    Udp::spawn(&mut builder, "0.0.0.0:5060", None).await?;
 
     // Add a TCP connector
     builder.add_transport_factory(Arc::new(TcpConnector::default()));

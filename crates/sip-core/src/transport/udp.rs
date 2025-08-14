@@ -28,12 +28,16 @@ impl fmt::Display for Udp {
 }
 
 impl Udp {
-    pub async fn spawn<A>(builder: &mut EndpointBuilder, addr: A) -> io::Result<TpHandle>
+    pub async fn spawn<A>(
+        builder: &mut EndpointBuilder,
+        addr: A,
+        public_addr: Option<SocketAddr>,
+    ) -> io::Result<TpHandle>
     where
         A: ToSocketAddrs,
     {
         let socket = UdpSocket::bind(addr).await?;
-        let bound = socket.local_addr()?;
+        let bound = public_addr.unwrap_or(socket.local_addr()?);
 
         log::info!("Bound UDP to {}", bound);
 

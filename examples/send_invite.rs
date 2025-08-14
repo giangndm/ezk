@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
     let dialog_layer = builder.add_layer(DialogLayer::default());
     let invite_layer = builder.add_layer(InviteLayer::default());
 
-    Udp::spawn(&mut builder, "0.0.0.0:5070").await?;
+    Udp::spawn(&mut builder, "0.0.0.0:5070", None).await?;
 
     // Build endpoint to start the SIP Stack
     let endpoint = builder.build();
